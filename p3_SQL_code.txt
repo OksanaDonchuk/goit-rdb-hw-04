@@ -1,0 +1,10 @@
+USE hw3;
+
+SELECT * FROM order_details as od
+INNER JOIN orders as o ON  o.id = od.order_id
+INNER JOIN customers as cm ON cm.id = o.customer_id
+INNER JOIN products as p ON p.id = od.product_id
+INNER JOIN categories as cg ON cg.id = p.category_id
+INNER JOIN employees as em ON em.employee_id = o.employee_id
+INNER JOIN shippers as sh ON sh.id = o.shipper_id
+INNER JOIN suppliers as sp ON sp.id = p.supplier_id;

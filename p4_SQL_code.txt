@@ -1,0 +1,44 @@
+4.1
+USE hw3;
+
+SELECT COUNT(*) as total_rows FROM order_details as od
+INNER JOIN orders as o ON  o.id = od.order_id
+INNER JOIN customers as cm ON cm.id = o.customer_id
+INNER JOIN products as p ON p.id = od.product_id
+INNER JOIN categories as cg ON cg.id = p.category_id
+INNER JOIN employees as em ON em.employee_id = o.employee_id
+INNER JOIN shippers as sh ON sh.id = o.shipper_id
+INNER JOIN suppliers as sp ON sp.id = p.supplier_id;
+
+4.2
+USE hw3;
+
+SELECT COUNT(*) as total_rows FROM order_details as od
+RIGHT JOIN orders as o ON  o.id = od.order_id
+LEFT JOIN customers as cm ON cm.id = o.customer_id
+INNER JOIN products as p ON p.id = od.product_id
+INNER JOIN categories as cg ON cg.id = p.category_id
+LEFT JOIN employees as em ON em.employee_id = o.employee_id
+INNER JOIN shippers as sh ON sh.id = o.shipper_id
+INNER JOIN suppliers as sp ON sp.id = p.supplier_id;
+
+Коли ми змінили оператор INNER JOIN тільки в декількох місцях (відповідно до ТЗ) на LEFT/RIGHT JOIN кількість рядків не змінилась, тобто становить 518. Це говорить про те, що при заданих умовах в запиті рядки мають відповідність в обох таблицях згідно з умовою.
+А якщо змінити всі оператори INNER JOIN наприклад на LEFT, при цьому змінити порядок з’єднання таблиць (почати з клієнтів), то отримаємо різницю. Вже 535 рядків. Це пов’язано з тим, що у 17 клієнтів не було замовлень, але при з’єднанні LEFT JOIN рядки лівої таблиці, які не мають відповідності в правій таблиці, виводяться зі значенням NULL.
+
+4.3 - 4.7
+USE hw3;
+
+SELECT cg.name, COUNT(*) as total, AVG(od.quantity) as average_quantity FROM order_details as od
+INNER JOIN orders as o ON  o.id = od.order_id
+INNER JOIN customers as cm ON cm.id = o.customer_id
+INNER JOIN products as p ON p.id = od.product_id
+INNER JOIN categories as cg ON cg.id = p.category_id
+INNER JOIN employees as em ON em.employee_id = o.employee_id
+INNER JOIN shippers as sh ON sh.id = o.shipper_id
+INNER JOIN suppliers as sp ON sp.id = p.supplier_id
+WHERE em.employee_id > 3 AND em.employee_id <= 10
+GROUP BY cg.name
+HAVING average_quantity > 21
+ORDER BY total DESC
+LIMIT 4
+OFFSET 1;
